@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MyBlog.Data;
+using MyBlog.Data.Repository;
 
 namespace MyBlog
 {
@@ -23,6 +24,8 @@ namespace MyBlog
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContextPool<AppDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("MyBlogDBConnection")));
+
+            services.AddTransient<IRepository, Repository>();
 
             services.AddControllers();
 

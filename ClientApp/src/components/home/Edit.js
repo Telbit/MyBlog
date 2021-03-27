@@ -21,9 +21,8 @@ export const Edit = () => {
         const post = {Title, Body};
         axios.post("/api/post/edit", post)
             .then(res => {
-                if (res.status === 200) {
-                    // window.location.href = "/";
-                    history.push("/")
+                if (res.data) {
+                    history.push("/");
                 }
             });
     }

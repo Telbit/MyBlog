@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyBlog.Data;
+using MyBlog.Data.Repository;
 using MyBlog.Models;
 using System;
 using System.Collections.Generic;
@@ -13,18 +14,18 @@ namespace MyBlog.Controllers
     [ApiController]
     public class PostController : ControllerBase
     {
-        private AppDBContext _context;
+        private IRepository _repo;
 
-        public PostController(AppDBContext context)
+        public PostController(IRepository repo)
         {
-            _context = context;
+            _repo = repo;
         }
 
         [HttpPost("edit")]
-        public async Task Edit(Post post)
+        public async Task<bool> Edit(Post post)
         {
-            _context.Posts.Add(post);
-            await _context.SaveChangesAsync();
+            _repo.AddPost(post);
+            return await _repo.SaveChangesAsync();
         }
     }
 }
