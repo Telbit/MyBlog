@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,24 +33,9 @@ export const NavMenu = () => {
                 <Typography variant="h6" className={classes.title}>
                     MyBlog
                 </Typography>
-                <Button color="inherit" 
-                    onClick={(e) => {
-                    e.preventDefault();
-                    window.location.href = "/"
-                }}
-                >Home</Button>
-                <Button color="inherit" 
-                    onClick={(e) => {
-                    e.preventDefault();
-                    window.location.href = "/post"
-                }}
-                >Post</Button>
-                <Button color="inherit" 
-                    onClick={(e) => {
-                    e.preventDefault();
-                    window.location.href = "/edit"
-                }}
-                >Edit</Button>
+                <Button color="inherit" component={Link} to="/">Home</Button>
+                <Button color="inherit" component={Link} to="/post">Post</Button>
+                <Button color="inherit" component={Link} to="/edit">Edit</Button>
             </Toolbar>
         </AppBar>
     </div>

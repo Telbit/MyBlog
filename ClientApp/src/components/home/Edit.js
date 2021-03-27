@@ -2,6 +2,7 @@ import { Button, TextField } from '@material-ui/core';
 import axios from 'axios';
 import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core';
+import { useHistory } from 'react-router';
 
 const useStyles = makeStyles({
     input: {
@@ -13,14 +14,16 @@ export const Edit = () => {
     const classes = useStyles();
     const [Title, setTitle] = useState('');
     const [Body, setBody] = useState('');
+    const history = useHistory();
 
     const sendForm = (e) => {
         e.preventDefault();
         const post = {Title, Body};
-        axios.post("/api/home/edit", post)
+        axios.post("/api/post/edit", post)
             .then(res => {
                 if (res.status === 200) {
-                    window.location.href = "/";
+                    // window.location.href = "/";
+                    history.push("/")
                 }
             });
     }
