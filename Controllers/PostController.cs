@@ -21,8 +21,22 @@ namespace MyBlog.Controllers
             _repo = repo;
         }
 
+        [HttpGet]
+        public IEnumerable<Post> GetAll()
+        {
+            var posts = _repo.GetAllPosts();
+            return posts;
+        }
+
+        [HttpGet("{id}")]
+        public ActionResult<Post> GetPost(int id)
+        {
+            var post = _repo.GetPost(id);
+            return post;
+        }
+
         [HttpPost("edit")]
-        public async Task<bool> Edit(Post post)
+        public async Task<ActionResult<bool>> Edit(Post post)
         {
             _repo.AddPost(post);
             return await _repo.SaveChangesAsync();
