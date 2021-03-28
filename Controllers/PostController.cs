@@ -32,13 +32,20 @@ namespace MyBlog.Controllers
         public ActionResult<Post> GetPost(int id)
         {
             var post = _repo.GetPost(id);
-            return post;
+            return post ?? new Post();
         }
 
         [HttpPost("edit")]
         public async Task<ActionResult<bool>> Edit(Post post)
         {
-            _repo.AddPost(post);
+            if (post.Id > 0)
+            {
+                _repo.UpdatePost(post);
+            }
+            else
+            {
+                _repo.AddPost(post);
+            }
             return await _repo.SaveChangesAsync();
         }
     }

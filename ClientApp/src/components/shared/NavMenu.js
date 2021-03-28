@@ -41,8 +41,8 @@ export const NavMenu = () => {
           <Button color="inherit" component={Link} to="/">
             Home
           </Button>
-          <Button color="inherit" component={Link} to="/edit">
-            Edit
+          <Button color="inherit" component={Link} to="/create">
+            Create
           </Button>
         </Toolbar>
       </AppBar>
