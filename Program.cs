@@ -1,7 +1,10 @@
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using MyBlog.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +16,38 @@ namespace MyBlog
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            var host = CreateHostBuilder(args).Build();
+
+            var scope = host.Services.CreateScope();
+
+            var context = scope.ServiceProvider.GetRequiredService<AppDBContext>();
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+            context.Database.EnsureCreated();
+
+            var adminRole = new IdentityRole("Admin");
+
+            if (!context.Roles.Any())
+            {
+                //create a role
+                roleManager.CreateAsync(adminRole).GetAwaiter().GetResult();
+            }
+
+            if (!context.Users.Any(u => u.UserName == "admin"))
+            {
+                //create a user
+                var adminUser = new IdentityUser
+                {
+                    UserName = "admin",
+                    Email = "admin@test.com",
+                };
+                userManager.CreateAsync(adminUser, "password").GetAwaiter().GetResult();
+                //add role to user
+                userManager.AddToRoleAsync(adminUser, adminRole.Name);
+            }
+
+            host.Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
