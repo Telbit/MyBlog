@@ -48,5 +48,12 @@ namespace MyBlog.Controllers
             }
             return await _repo.SaveChangesAsync();
         }
+
+        [HttpGet("remove/{id}")]
+        public async Task<ActionResult<bool>> Remove(int id)
+        {
+            _repo.RemovePost(id);
+            return await _repo.SaveChangesAsync();
+        }
     }
 }
