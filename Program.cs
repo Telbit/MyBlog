@@ -42,7 +42,7 @@ namespace MyBlog
                     UserName = "admin",
                     Email = "admin@test.com",
                 };
-                userManager.CreateAsync(adminUser, "password").GetAwaiter().GetResult();
+                userManager.CreateAsync(adminUser, "Admin1").GetAwaiter().GetResult();
                 //add role to user
                 userManager.AddToRoleAsync(adminUser, adminRole.Name);
             }
