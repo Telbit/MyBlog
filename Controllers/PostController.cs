@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyBlog.Data;
 using MyBlog.Data.Repository;
@@ -22,6 +23,7 @@ namespace MyBlog.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IEnumerable<Post> GetAll()
         {
             var posts = _repo.GetAllPosts();
@@ -36,6 +38,7 @@ namespace MyBlog.Controllers
         }
 
         [HttpPost("edit")]
+        [Authorize]
         public async Task<ActionResult<bool>> Edit(Post post)
         {
             if (post.Id > 0)
@@ -50,6 +53,7 @@ namespace MyBlog.Controllers
         }
 
         [HttpGet("remove/{id}")]
+        [Authorize]
         public async Task<ActionResult<bool>> Remove(int id)
         {
             _repo.RemovePost(id);
