@@ -1,14 +1,22 @@
 import { Typography } from "@material-ui/core";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
-import fetchData from "../shared/FetchData";
+import { useHistory } from "react-router";
 
 export const Post = ({ match }) => {
     const [Post, setPost] = useState({});
+    const history = useHistory();
     const url = `/api/post/${match.params.id}`;
 
     useEffect(() => {
-        fetchData(url).then(data => setPost(data));
-    }, [url]);
+        axios.get(url).then(res => {
+            if (res.status === 200) {
+                setPost(res.data);
+            } else {
+                history.push("/")
+            }
+        });
+    }, [history, url]);
 
     return (
         <div>

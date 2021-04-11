@@ -6,7 +6,8 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,6 +23,16 @@ const useStyles = makeStyles((theme) => ({
 
 export const NavMenu = () => {
   const classes = useStyles();
+  const history = useHistory();
+  const url = "/api/auth/logout";
+
+  const Logout = () => {
+    axios.delete(url).then(res => {
+      if (res.status === 200) {
+        history.push("/login")
+      }
+    });
+  }
 
   return (
     <div className={classes.root}>
@@ -44,6 +55,10 @@ export const NavMenu = () => {
           <Button color="inherit" component={Link} to="/create">
             Create
           </Button>
+          <Button color="inherit" component={Link} to="/login">
+            Login
+          </Button>
+          <Button color="inherit" onClick={() => Logout()}>Logout</Button>
         </Toolbar>
       </AppBar>
     </div>

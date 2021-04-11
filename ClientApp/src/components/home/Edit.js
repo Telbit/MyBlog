@@ -2,7 +2,7 @@ import { Button, TextField } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core";
 import { useHistory } from "react-router";
-import fetchData from "../shared/FetchData";
+import axios from "axios";
 
 const useStyles = makeStyles({
     input: {
@@ -18,11 +18,11 @@ export const Edit = ({ match }) => {
     const history = useHistory();
     const url = "/api/post/edit";
 
-    const sendForm = (e) => {
-        e.preventDefault();
+    const sendForm = (event) => {
+        event.preventDefault();
         const post = { Id, Title, Body };
-        fetchData(url, post).then((data) => {
-            if (data) {
+        axios.post(url, post).then(res => {
+            if (res.status === 200) {
                 history.push("/");
             }
         });
@@ -31,11 +31,14 @@ export const Edit = ({ match }) => {
     useEffect(() => {
         if (match.params.id > 0) {
             const url = `/api/post/${match.params.id}`;
-            fetchData(url).then(data => {
-                setId(data.id);
-                setTitle(data.title);
-                setBody(data.body);
-            })
+            axios.get(url).then(res => {
+                if (res.status === 200) {
+                    const data = res.data;
+                    setId(data.id);
+                    setTitle(data.title);
+                    setBody(data.body);
+                }
+            });
         }
     }, [match.params.id])
 

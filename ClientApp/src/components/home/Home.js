@@ -1,18 +1,23 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import fetchData from "../shared/FetchData";
 
 export const Home = () => {
     const [Posts, setPosts] = useState([]);
     const url = "/api/post";
 
     useEffect(() => {
-        fetchData(url).then(data => setPosts(data));
+        axios.get(url)
+            .then(res => {
+                if (res.status === 200) {
+                    setPosts(res.data)
+                }
+            })
     }, []);
 
     const removeItem = (url, target) => {
-        fetchData(url).then(data => {
-            if (data) {
+        axios.delete(url).then(res => {
+            if (res.status === 200) {
                 target.remove();
             }
         });
