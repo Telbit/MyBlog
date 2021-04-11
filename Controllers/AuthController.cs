@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyBlog.Services;
 using MyBlog.ViewModels;
@@ -39,6 +40,14 @@ namespace MyBlog.Controllers
             }
 
             return BadRequest("Some properties are not valid");
+        }
+
+        [HttpDelete("logout")]
+        [Authorize]
+        public IActionResult Logout()
+        {
+            Response.Cookies.Delete("jwt");
+            return Ok("successfully logged out");
         }
     }
 }
