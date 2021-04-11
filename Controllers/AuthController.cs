@@ -29,6 +29,10 @@ namespace MyBlog.Controllers
 
                 if (result.IsSuccess)
                 {
+                    Response.Cookies.Append("jwt", result.Message, new CookieOptions { 
+                        HttpOnly = true
+                    });
+                    result.Message = "successfully logged in";
                     return Ok(result);
                 }
                 return BadRequest(result);
