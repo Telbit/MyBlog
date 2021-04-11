@@ -24,40 +24,62 @@ namespace MyBlog.Controllers
 
         [HttpGet]
         [Authorize]
-        public IEnumerable<Post> GetAll()
+        public IActionResult GetAll()
         {
             var posts = _repo.GetAllPosts();
-            return posts;
+            if (posts != null)
+            {
+                return Ok(posts);
+            }
+            return NotFound("there are no posts yet");
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Post> GetPost(int id)
+        public IActionResult GetPost(int id)
         {
-            var post = _repo.GetPost(id);
-            return post ?? new Post();
+            if (id > 0)
+            {
+                var post = _repo.GetPost(id);
+                if (post != null)
+                {
+                    return Ok(post);
+                }
+                return NotFound($"post not found with this id: {id}");
+            }
+            return BadRequest("the id should be bigger than 0");
         }
 
         [HttpPost("edit")]
         [Authorize]
-        public async Task<ActionResult<bool>> Edit(Post post)
+        public async Task<IActionResult> Edit(Post post)
         {
-            if (post.Id > 0)
+            if (post != null)
             {
-                _repo.UpdatePost(post);
+                if (post.Id > 0)
+                {
+                    _repo.UpdatePost(post);
+                }
+                else
+                {
+                    _repo.AddPost(post);
+                }
+                await _repo.SaveChangesAsync();
+                return Ok("changes saved");
             }
-            else
-            {
-                _repo.AddPost(post);
-            }
-            return await _repo.SaveChangesAsync();
+            return BadRequest("the post cannot be null");
         }
 
-        [HttpGet("remove/{id}")]
+        [HttpDelete("remove/{id}")]
         [Authorize]
-        public async Task<ActionResult<bool>> Remove(int id)
+        public async Task<IActionResult> Remove(int id)
         {
-            _repo.RemovePost(id);
-            return await _repo.SaveChangesAsync();
+            if (id > 0)
+            {
+                _repo.RemovePost(id);
+                await _repo.SaveChangesAsync();
+                return Ok("post deleted");
+            }
+            return BadRequest("the id should be bigger than 0");
         }
     }
 }
