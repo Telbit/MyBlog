@@ -14,6 +14,7 @@ using MyBlog.Data.Repository;
 using MyBlog.Services;
 using System;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MyBlog
 {
@@ -51,6 +52,16 @@ namespace MyBlog
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["AuthSettings:Key"])),
                     ValidateIssuerSigningKey = true
                 };
+
+                options.Events = new JwtBearerEvents();
+                options.Events.OnMessageReceived = context => {
+                    if (context.Request.Cookies.ContainsKey("jwt"))
+                    {
+                        context.Token = context.Request.Cookies["jwt"];
+                    }
+                    return Task.CompletedTask;
+                };
+
             });
 
             services.AddScoped<IUserService, UserService>();
